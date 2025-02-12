@@ -1,0 +1,12 @@
+// weights are the weights of the next (down) layer
+uniform sampler2D uun_weightsDeltas, uun_inputs;
+uniform float uun_toSparsity2;
+
+varying vec2 vUV;
+
+
+void main(void) {
+  vec4 wd = uun_toSparsity2 * texture2D(uun_weightsDeltas, vUV);
+ 
+  gl_FragColor = wd;
+} 

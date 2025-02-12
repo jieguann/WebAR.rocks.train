@@ -1,0 +1,54 @@
+uniform sampler2D uun_outputs;
+uniform vec2 uun_sizePx;
+
+varying vec2 vUV;
+
+
+const vec2 ONE2 = vec2(1.);
+const float EPS = 0.000001; // epsilon
+
+// take the max signal in abs value on a 4 pixels patch
+// not executed as a reduction (1/4 of pixels should be white, other black)
+
+void main(void) {
+  vec2 dxy = ONE2 / uun_sizePx; // normalized distance between 2 pixels
+  vec2 toSizePx = uun_sizePx / 2.0;
+
+  vec2 uvFromCornerPx = 2. * floor(vUV*toSizePx);
+  vec2 uvFromCorner = uvFromCornerPx / uun_sizePx;
+
+  // uv of pixels on the patch:
+  vec2 uv0 = uvFromCorner + dxy * 0.5;
+  vec2 uv1 = uv0 + dxy*vec2(1., 0.);
+  vec2 uv2 = uv0 + dxy*vec2(1., 1.);
+  vec2 uv3 = uv0 + dxy*vec2(0., 1.);
+
+  // test what pixel we are currently drawing:
+  float is0 = step(distance(uv0, vUV), EPS);
+  float is1 = step(distance(uv1, vUV), EPS);
+  float is2 = step(distance(uv2, vUV), EPS);
+  float is3 = step(distance(uv3, vUV), EPS);
+
+  //is0=0.0;is1=0.0;is2=0.0;is3=1.0; // debug
+
+  //vec4 thisVal = texture2D(uun_outputs, vUV);
+
+  // read vals:
+  vec4 val0 = texture2D(uun_outputs, uv0);
+  vec4 val1 = texture2D(uun_outputs, uv1);
+  vec4 val2 = texture2D(uun_outputs, uv2);
+  vec4 val3 = texture2D(uun_outputs, uv3);
+  
+  //vec4 thisVal = texture2D(uun_outputs, vUV);
+  vec4 thisVal = is0*val0 + is1*val1 + is2*val2 + is3*val3;
+
+  vec4 maxVal01 = max(val0, val1);
+  vec4 maxVal23 = max(val2, val3);
+  vec4 maxVal = max(maxVal01, maxVal23);
+
+  vec4 isMax = step(maxVal, thisVal);
+  gl_FragColor = isMax;
+
+  // DEBUG ZONE:
+  //gl_FragColor = vec4(is0, is1, is2, is3); // for each color channel, should light a different quarter
+} 

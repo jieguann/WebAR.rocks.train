@@ -1,0 +1,9 @@
+uniform sampler2D uun_source;
+
+varying vec2 vUV;
+
+const vec2 ONE2 = vec2(1.,1.);
+
+void main(void) {
+  gl_FragColor = texture2D(uun_source, ONE2-vUV);
+} 

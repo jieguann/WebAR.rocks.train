@@ -1,0 +1,27 @@
+// reorganize a texture which content is sorted along 2 dimensions, using patch
+// uun_dims.x*uun_dims.y should be equals to the size of uun_source in pixels
+// uun_source is sorted primary along uun_dims.x and secondary along uun_dims.y
+// return the same texture but sorted firstly along uun_dims.y and secondly along uun_dims.x
+
+
+uniform sampler2D uun_source;
+uniform vec2 uun_dims;
+
+varying vec2 vUV;
+
+void main(void) {
+  float size = uun_dims.x * uun_dims.y;
+  vec2 uvPatchIn = floor(vUV*size) / size;
+  vec2 ruv = fract(vUV*size); // remaining uvs. between 0 and 1
+
+  vec2 yIndex = floor(uvPatchIn*uun_dims.y); // in [0, dy[
+  vec2 xIndex = floor(uun_dims.x*fract(uvPatchIn*uun_dims.y)); // in [0, dx[
+  
+  vec2 uvPatchOut = (xIndex*uun_dims.y+yIndex) / size;
+
+  gl_FragColor = texture2D(uun_source, uvPatchOut+ruv/size);
+
+  // DEBUG ZONE:
+  //gl_FragColor=texture2D(uun_source, vUV);
+} 
+ 

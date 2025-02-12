@@ -1,0 +1,78 @@
+// APPLY WEIGHTS (FEEDFORWARD)
+uniform sampler2D uun_weights, uun_inputs, uun_bias;
+uniform float uun_toSize, uun_kernelsCount, uun_toSparsity, uun_fromSize, uun_isDebug, uun_isDebug2;
+uniform vec2 uun_inputScale;
+
+
+varying vec2 vUV;
+
+const vec2 ONE2 = vec2(1.);
+const vec2 ZERO2 = vec2(0.);
+
+
+// weights layout according to destination layer
+// inputs layout according to source layer
+// output layout according to destination layer
+
+void main(void) {
+  float stride = uun_kernelsCount * uun_fromSize / uun_toSize; // in from pixels
+  float conSize = uun_toSparsity * uun_toSize;
+  float weightsSize = uun_kernelsCount * uun_toSparsity;
+  float toKernelClusterSize = conSize / uun_kernelsCount;
+  //float kernelClusterCount = uun_toSize / uun_kernelsCount; // number of patches in a kernel cluster 8
+
+  // make sure there is no rounding or interpolation error on vUV:
+  vec2 conCo = floor(vUV * conSize);
+  vec2 uv = (conCo + 0.5) / conSize;
+
+  vec2 kernelCo = floor(uun_kernelsCount*uv); // in which kernel we are
+  vec2 inKernelClusterCo = conCo - kernelCo * toKernelClusterSize;
+  
+  vec2 patchOffsetCo = floor(inKernelClusterCo / uun_toSparsity); // integer between 0 and toKernelClusterSize-1  [0, 8[
+  vec2 patchCo = inKernelClusterCo - patchOffsetCo * uun_toSparsity; // between 0 and 1
+
+  vec2 weightCo = patchCo + kernelCo * uun_toSparsity;
+  vec2 weightUv = (weightCo + 0.5) / weightsSize;
+  
+  vec2 offsetFromCo = stride * patchOffsetCo; // in pixels, offset in the from texture. between 0 and uun_fromSize
+
+  // apply inputScale to offsetFromCo:
+  vec2 offsetFromCoMarginLeft = floor(0.5 * (uun_fromSize - 1.0) * (ONE2 - uun_inputScale)); // 0 if inputScale = 1
+  offsetFromCo = floor(uun_inputScale * offsetFromCo + offsetFromCoMarginLeft);
+
+  vec2 fromCo = offsetFromCo + patchCo;
+  vec2 fromUv = (fromCo + 0.5) / uun_fromSize;
+
+  // in debug mode, come back to 0. But it is nonsense to apply a kernel:
+  fromUv = mix(fromUv, mod(fromUv, ONE2), uun_isDebug2);
+  vec2 isInside = step(fromUv, ONE2) * step(ZERO2, fromUv);
+  
+  //fromUv = mix(mod(fromUv, ONE2), fromUv, isInside.x * isInside.y);
+
+  vec4 weight = texture2D(uun_weights, weightUv);
+  vec4 fromInput = texture2D(uun_inputs, fromUv);
+
+  vec4 weFrom = weight * fromInput;
+  vec4 bias = texture2D(uun_bias, weightUv);
+
+  vec4 outpt = weFrom * uun_toSparsity * uun_toSparsity + bias;
+  outpt *= isInside.x * isInside.y;
+  outpt = mix(outpt, vec4(weFrom.rg, fromUv), uun_isDebug);
+  //outpt = mix(outpt, vec4(weightUv, fromUv), uun_isDebug2);
+  outpt = mix(outpt, vec4(weightUv, mix(vec2(-1.0), fromUv, isInside.x * isInside.y)), uun_isDebug2);
+
+  gl_FragColor = outpt;
+
+  // DEBUG ZONE:
+  //gl_FragColor = vec4(1.);
+  //gl_FragColor = vec4(weightUv, fromUv);
+  //gl_FragColor = from;
+  //gl_FragColor = vec4(fromUv, from.xy);
+  //gl_FragColor = isInside.x*isInside.y*vec4(1.,1.,1.,1.);
+  //gl_FragColor = weFrom * uun_toSparsity * uun_toSparsity + bias;
+  //gl_FragColor = vec4(offsetFromCo / uun_fromSize, patchCo);
+
+  //FOR CONNECTIVITYCONVDEBUG
+  //gl_FragColor = vec4(weFrom.rg, fromUv);
+} 
+ 

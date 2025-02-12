@@ -1,0 +1,12 @@
+uniform sampler2D uun_weights, uun_deltas;
+
+varying vec2 vUV;
+
+void main(void) {
+    vec4 weight = texture2D(uun_weights, vUV);
+    vec4 delta = texture2D(uun_deltas, vUV);
+    
+    gl_FragColor = weight * delta; 
+} 
+ 
+ 

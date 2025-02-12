@@ -1,0 +1,17 @@
+
+uniform sampler2D uun_signal, uun_expectedOutput, uun_sigmaPrimeZ, uun_deltaMask;
+
+varying vec2 vUV;
+
+const vec4 ONE4 = vec4(1.);
+
+// see http://neuralnetworksanddeeplearning.com/chap3.html for more information
+
+void main(void) {
+  vec4 inputSignal = texture2D(uun_signal, vUV);
+  vec4 expected = texture2D(uun_expectedOutput, vUV);
+  vec4 spz = texture2D(uun_sigmaPrimeZ, vUV);
+  vec4 mask = texture2D(uun_deltaMask, vUV);
+
+  gl_FragColor = (inputSignal - expected) * mask;
+}  

@@ -1,0 +1,14 @@
+varying vec2 vUV;
+uniform sampler2D uun_source;
+uniform float uun_tilt;
+
+const vec3 LUMA = vec3(0.299, 0.587, 0.114);
+
+void main(void) {
+  vec3 cBotLeft  = texture2D(uun_source, vUV).rgb;
+  vec3 cBotRight = texture2D(uun_source, vUV + vec2(0.0, uun_tilt)).rgb;
+  vec3 cTopRight = texture2D(uun_source, vUV + vec2(uun_tilt, uun_tilt)).rgb;
+  vec3 cTopLeft  = texture2D(uun_source, vUV + vec2(uun_tilt, 0.0)).rgb;
+
+  gl_FragColor=vec4(dot(cBotLeft, LUMA), dot(cBotRight, LUMA), dot(cTopRight, LUMA), dot(cTopLeft, LUMA));
+} 

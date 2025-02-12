@@ -1,0 +1,16 @@
+// UPDATE WEIGHTS(LEARNING)
+uniform sampler2D uun_deltas, uun_inputs, uun_weightsFromTo;
+uniform float uun_SGDLearningRate, uun_floatMax;
+
+const vec4 ONE4 = vec4(1.); 
+
+varying vec2 vUV;
+
+void main(void) {
+  vec4 fromTo = texture2D(uun_weightsFromTo, vUV);
+
+  vec4 d = texture2D(uun_deltas, fromTo.ba);
+  vec4 i = texture2D(uun_inputs, fromTo.rg);
+  
+  gl_FragColor = clamp(-uun_SGDLearningRate*d*i, -uun_floatMax*ONE4, uun_floatMax*ONE4);
+}

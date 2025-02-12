@@ -1,0 +1,24 @@
+uniform sampler2D uun_source;
+
+varying vec2 vUV;
+
+const float offs = 0.1;
+const vec4 ONE4 = vec4(1.);
+
+void main(void) {
+  vec4 color = texture2D(uun_source, vUV);
+  
+  // convert color to 0-255 int color:
+  vec4 color255 = floor(color * 255. + offs * ONE4);
+
+  float x = color255.r / 255.;
+  
+  x += color255.g / (255.*255.);
+
+  x += color255.b / (255.*255.*255.);
+
+  x += color255.a / (255.*255.*255.*255.);
+
+  gl_FragColor = x * ONE4;
+} 
+  

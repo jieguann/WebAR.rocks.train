@@ -1,0 +1,37 @@
+// compute weights*delta to transmit to the previous layer (backprop)
+// the output will be summed using mipmaps
+uniform sampler2D uun_weights, uun_deltas;
+uniform float uun_toSize, uun_fromSize, uun_isDebug2;
+
+varying vec2 vUV;
+
+
+void main(void) {
+  float size = uun_toSize * uun_fromSize; // size in pixels
+
+  vec2 zou = vUV * uun_fromSize;
+  vec2 nFrom = floor(zou);
+ 
+  /*vec2 uvTo = zou - nFrom; // between 0 and 1
+  uvTo.y = 1. - uvTo.y;
+  vec2 nTo = floor(uvTo * uun_toSize);*/
+
+  vec2 nTo = floor(vUV * size) - nFrom * uun_toSize;
+  nTo.y = uun_toSize - 1.0 - nTo.y;
+  vec2 uvTo = (nTo + 0.5) / uun_toSize;
+  
+  vec2 uvWeight = (0.5 + nTo * uun_fromSize + nFrom) / size;
+  vec4 weight = texture2D(uun_weights, uvWeight);
+
+  vec4 delta = texture2D(uun_deltas, uvTo);
+
+  vec4 outpt = weight * delta;
+  outpt = mix(outpt, vec4(uvWeight, uvTo), uun_isDebug2);
+
+  gl_FragColor = outpt;
+
+  // DEBUG ZONE:
+  
+} 
+ 
+ 

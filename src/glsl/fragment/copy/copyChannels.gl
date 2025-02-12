@@ -1,0 +1,12 @@
+//DEFAULT INPUT SHADER
+uniform sampler2D uun_source, uun_mask;
+
+varying vec2 vUV;
+
+const vec4 ONE4 = vec4(1.,1.,1.,1.);
+
+void main(void) {
+  vec4 maskColor = texture2D(uun_mask, vUV);
+  vec4 color = texture2D(uun_source, vUV);
+  gl_FragColor = maskColor.a * color.r * ONE4;
+}  

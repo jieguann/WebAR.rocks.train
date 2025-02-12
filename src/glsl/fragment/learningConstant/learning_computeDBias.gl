@@ -1,0 +1,17 @@
+// COMPUTE DBIAS (LEARNING)
+
+uniform sampler2D uun_deltas;
+uniform float uun_SGDLearningRate, uun_floatMax;
+
+varying vec2 vUV;
+
+const vec4 ONE4 = vec4(1.); 
+
+void main(void) {
+
+  vec4 delta = texture2D(uun_deltas, vUV);
+    
+  gl_FragColor = clamp(-uun_SGDLearningRate * delta, -uun_floatMax*ONE4, uun_floatMax*ONE4);
+} 
+
+ 

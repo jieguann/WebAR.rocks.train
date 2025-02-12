@@ -1,0 +1,23 @@
+// weights are the weights of the next (down) layer
+uniform sampler2D uun_weightsDeltas, uun_inputs;
+uniform float uun_toSparsity2;
+
+varying vec2 vUV;
+
+const vec4 ONE4 = vec4(1.);
+
+
+vec4 eluDerivative(vec4 z) {
+  vec4 mixCoeff = step(0., z);
+  vec4 negVal = exp(-abs(z));
+  return mix(negVal, ONE4, mixCoeff);
+}
+
+
+void main(void) {
+  vec4 wd = uun_toSparsity2 * texture2D(uun_weightsDeltas, vUV);
+  vec4 zSummedInput = texture2D(uun_inputs, vUV);
+
+  vec4 delta = wd * eluDerivative(zSummedInput);
+  gl_FragColor = delta;
+} 

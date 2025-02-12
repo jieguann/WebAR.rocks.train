@@ -1,0 +1,50 @@
+uniform sampler2D uun_signal;
+uniform vec2 uun_sampleOffset, uun_sampleScale;
+
+uniform vec2 uun_offset, uun_scale;
+uniform mat2 uun_rotateMatrix;
+uniform float uun_bgColor, uun_brightness, uun_sampleCrop, uun_aspectRatio;
+
+varying vec2 vUV;
+
+const vec2 ONE2 = vec2(1.);
+const vec4 ONE4 = vec4(1.);
+
+
+void main(void) {
+
+  // apply transform:
+  vec2 uvCentered = vUV*2. - ONE2; // uv between -1 and 1
+
+  uvCentered *= uun_scale;                    // apply flip and scale
+  uvCentered = uun_rotateMatrix * uvCentered; // apply rotation;
+  uvCentered += uun_offset;                   // apply offset
+
+  vec2 uv = 0.5 * (uvCentered + ONE2);    // uv between 0 and 1
+
+  // cut the sample in the batch:
+  vec2 uvMin = uun_sampleOffset;
+  vec2 uvMax = uun_sampleOffset + uun_sampleScale;
+
+  vec2 uvTransf = uun_sampleOffset + uv * uun_sampleScale; // transformed UV
+  vec2 isInside2 = step(uvTransf, uvMax) * step(uvMin, uvTransf);
+  float isInside = max(1.0 - uun_sampleCrop, isInside2.x * isInside2.y);
+
+  vec4 backgroundColor = uun_bgColor * ONE4;
+
+  // apply image aspect ratio:
+  uvTransf *= vec2(1.0, uun_aspectRatio);
+
+  vec4 color = texture2D(uun_signal, uvTransf);
+  color.rgb *= uun_brightness;
+
+  gl_FragColor = mix(backgroundColor, color, isInside * color.a * ONE4);
+
+  // DEBUG ZONE:
+  //gl_FragColor=texture2D(uun_signal, uun_offset+vUV*uun_scale);
+
+  //isInside = isInside2.x * isInside2.y;
+  //gl_FragColor = vec4(gl_FragColor.r, isInside2.x, isInside2.y, 1.0);
+
+} 
+ 

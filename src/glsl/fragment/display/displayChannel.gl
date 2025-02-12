@@ -1,0 +1,47 @@
+// DISPLAY THE TEXTURE FOR DEBUG
+// USED IN TRAINER GPU LIVE VIEW
+
+uniform sampler2D uun_source;
+uniform vec4 uun_channel;
+uniform float uun_offset, uun_scale, uun_abs;
+
+const vec3 ONE3 = vec3(1.);
+const vec3 COLOR_NAN = vec3(1., 0., 0.); // red
+const vec3 COLOR_INF = vec3(0., 1., 0.); // lime
+
+
+varying vec2 vUV;
+
+
+// test if nan or not
+// see https://stackoverflow.com/questions/9446888/best-way-to-detect-nans-in-opengl-shaders
+bool is_NaN( float val ) {
+  return ( val < 0.0 || 0.0 < val || val == 0.0 ) ? false : true;
+}
+
+
+bool is_infinity( float val ){
+  return ( val + 1.0 == val ) ? true : false;
+}
+
+
+void main(void) {
+  float intensity = dot(uun_channel, texture2D(uun_source, vUV));
+
+  // floating special colors:
+  if (is_NaN(intensity)){
+    gl_FragColor = vec4(COLOR_NAN, 1.0);
+    return;
+  }
+  if (is_infinity(intensity)){
+    gl_FragColor = vec4(COLOR_INF, 1.0);
+    return;
+  }
+  
+
+  float intensityTransformed = uun_offset + uun_scale * intensity;
+  vec3 color = mix(intensityTransformed, abs(intensityTransformed), uun_abs) * ONE3;
+
+  gl_FragColor = vec4(color, 1.);
+}  
+ 

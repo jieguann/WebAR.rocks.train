@@ -1,0 +1,22 @@
+//
+// Renders the channel of a float texture into an unsigned byte RGBA color
+//
+uniform sampler2D uun_source, uun_mask;
+uniform vec2 uun_clampRange;
+
+varying vec2 vUV;
+
+const vec4 ONE4 = vec4(1.);
+
+void main(void) {
+  vec4 inpt = texture2D(uun_source, vUV);
+  vec4 mask = texture2D(uun_mask, vUV); // = 1 where we should clamp
+  vec4 clamped = clamp(inpt, uun_clampRange[0]*ONE4, uun_clampRange[1]*ONE4);
+
+  gl_FragColor = mix(inpt, clamped, mask);
+
+  // DEBUG ZONE:
+  //gl_FragColor = inpt;
+  //gl_FragColor =  clamped;
+} 
+ 

@@ -1,0 +1,49 @@
+// weights are the weights of the next (down) layer
+uniform sampler2D uun_weightsDeltas, uun_inputs;
+uniform float uun_toSparsity2;
+
+varying vec2 vUV;
+
+const vec4 ONE4 = vec4(1.);
+const float SQRT_2_OVER_PI = 0.7978845608028654;
+const float A = 0.044715;
+
+const vec4 LEAK = vec4(0.001);
+
+
+vec4 tanh4(vec4 x) {
+  // FF fast version:
+  /*vec4 ex = exp(x);
+  vec4 r = (ex - ONE4/ex) / (ex + ONE4/ex);*/
+
+  // FP special robust version:
+  vec4 exa = exp(-abs(x));
+  vec4 exa2 = exa * exa;
+  //vec4 r = sign(x) * (ONE4/exa - exa) / (ONE4/exa + exa);
+  vec4 r = sign(x) * (ONE4 - exa2) / (ONE4 + exa2);
+  return r;
+}
+
+
+vec4 geluDerivative(vec4 z) {
+  vec4 az2 = (A * z) * z;
+  vec4 az3 = az2 * z;
+  vec4 gZ = SQRT_2_OVER_PI * (z + az3);
+  vec4 gPrimZ = SQRT_2_OVER_PI * (ONE4 + 3.0*az2);
+  vec4 tanhGZ = tanh4(gZ);
+  return LEAK + 0.5 * ( ONE4 + tanhGZ + z*gPrimZ*(ONE4 - tanhGZ*tanhGZ) );
+
+  // for the plotter:
+  /*
+    0.01*x + 0.5 * ( 1 + (tanh(0.7978845608028654*(x+0.044715*x^3))) + x*(0.7978845608028654 * (1 + 3.0*0.044715*x*x))*(1 - (tanh(0.7978845608028654*(x+0.044715*x^3)))^2) )
+  */
+}
+
+
+void main(void) {
+  vec4 wd = uun_toSparsity2 * texture2D(uun_weightsDeltas, vUV);
+  vec4 zSummedInput = texture2D(uun_inputs, vUV);
+
+  vec4 delta = wd * geluDerivative(zSummedInput);
+  gl_FragColor = delta;
+} 

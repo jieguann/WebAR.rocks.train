@@ -1,0 +1,40 @@
+// UPDATE WEIGHTS(LEARNING)
+uniform sampler2D uun_deltas, uun_inputs, uun_remapMask, uun_inputsRemap0, uun_inputsRemap1, uun_inputsRemap2;
+uniform float uun_SGDLearningRate, uun_fromSize, uun_toSize, uun_floatMax;
+
+const vec4 ONE4 = vec4(1., 1., 1., 1.); 
+const vec4 EPS4 = vec4(0.001, 0.001, 0.001, 0.001);
+
+varying vec2 vUV;
+
+// weights are grouped by toLayer neurons
+void main(void) {
+  
+  vec2 uvFrom = fract(vUV*uun_toSize); // between 0 and 1
+
+  vec4 i = texture2D(uun_inputs, uvFrom);
+  vec4 d = texture2D(uun_deltas, vUV);
+
+  // REMAP:
+  vec4 iRemap0 = texture2D(uun_inputsRemap0, uvFrom);
+  vec4 iRemap1 = texture2D(uun_inputsRemap1, uvFrom);
+  vec4 iRemap2 = texture2D(uun_inputsRemap2, uvFrom);
+  
+  vec4 remapMask = texture2D(uun_remapMask, vUV) * 255.;
+
+  vec4 isNoRemap = step(-EPS4, -remapMask); // 1 if no remap, 0 otherwise
+  vec4 isNotFoundMap = ONE4 - isNoRemap;
+
+  vec4 isRemap0 = isNotFoundMap*step(-ONE4-EPS4, -remapMask); // 1 if remap0, 0 otherwise
+  isNotFoundMap *= ONE4 - isRemap0;
+
+  vec4 isRemap1 = isNotFoundMap*step(-ONE4-EPS4, -remapMask); // 1 if remap1, 0 otherwise
+  isNotFoundMap *= ONE4 - isRemap1;
+
+  vec4 isRemap2 = isNotFoundMap; // 1 if remap2, 0 otherwise
+
+  vec4 iRemaped = isNoRemap*i + isRemap0*iRemap0 + isRemap1*iRemap1 + isRemap2*iRemap2;
+
+
+  gl_FragColor = clamp(-uun_SGDLearningRate*d*iRemaped, -uun_floatMax*ONE4, uun_floatMax*ONE4);
+}

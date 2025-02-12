@@ -1,0 +1,9 @@
+precision lowp float;
+attribute vec2 aat_position;
+
+varying vec2 vUV;
+
+void main(void) {
+  gl_Position = vec4(aat_position, 0., 1.);
+  vUV = (aat_position*0.5) + vec2(0.5);
+}

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="content-language" content="en-EN" />
+  <link rel="icon" type="image/png" href="images/favicons/favicon16.png" sizes="16x16"/>
+  <link rel="icon" type="image/png" href="images/favicons/favicon32.png" sizes="32x32"/>
+  <link rel="icon" type="image/png" href="images/favicons/favicon64.png" sizes="64x64"/>
+  <meta http-equiv="Cache-Control" content="no-store" />
+  <title>.: WebAR.rocks.train :.</title>
+  
+
+  <!-- WEBGL ENGINE -->
+  <script src="src/js/trainer/webgl/Shaders.js"></script>
+  <script src="src/js/trainer/webgl/Context.js"></script>
+  <script src="src/js/trainer/webgl/VBO.js"></script>
+  <script src="src/js/trainer/webgl/FBO.js"></script>
+  <script src="src/js/trainer/webgl/Texture.js"></script>
+  
+
+  <!-- TRAINER CORE -->
+  <!-- TRAINER CORE - neural network -->
+  <script src="src/js/trainer/core/layers/InputLayer.js"></script>
+  <script src="src/js/trainer/core/layers/NeuronLayer.js"></script>
+  <script src="src/js/trainer/core/NeuronNetwork.js"></script>
+  <!-- TRAINER CORE - layer connectivities -->
+  <script src="src/js/trainer/core/connectivities/ConnectivityFull.js"></script>
+  <script src="src/js/trainer/core/connectivities/ConnectivitySquare.js"></script>
+  <script src="src/js/trainer/core/connectivities/ConnectivityDirect.js"></script>
+  <script src="src/js/trainer/core/connectivities/ConnectivityConv.js"></script>
+  <script src="src/js/trainer/core/connectivities/ConnectivitySquareFast.js"></script>
+  <script src="src/js/trainer/core/connectivities/ConnectivityFullNPoT.js"></script>
+  <!-- TRAINER CORE - additionnal features -->
+  <script src="src/js/trainer/core/features/MaxPooling.js"></script>
+  <!-- TRAINER CORE - evaluation -->
+  <script src="src/js/trainer/core/Evaluator.js"></script>
+  <script src="src/js/trainer/core/Trainer.js"></script>
+
+
+  <!-- USER INTERFACE -->
+  <script src="src/js/trainer/UI/UICode.js"></script>
+  <script src="src/js/trainer/UI/UIControls.js"></script>
+  <script src="src/js/trainer/UI/UI.js"></script>
+  <!-- USER INTERFACE - Graphs for Monitoring / live graph view -->
+  <script src="src/js/trainer/UI/graphs/GraphClasses.js"></script>
+  <script src="src/js/trainer/UI/graphs/GraphIdent.js"></script>
+  <script src="src/js/trainer/UI/graphs/GraphTests.js"></script>
+
+
+  <!-- IMAGE PROCESSING -->
+  <script src="src/js/trainer/imageProcessing/ImageTransformer.js"></script>
+  <script src="src/js/trainer/imageProcessing/ImageTilter.js"></script>
+  <!-- IMAGE PROCESSING - passes -->
+  <script src="src/js/trainer/imageProcessing/passes/RandomImageRenderer.js"></script>
+  <script src="src/js/trainer/imageProcessing/passes/Blur.js"></script>
+  <script src="src/js/trainer/imageProcessing/passes/ShaderPass.js"></script>
+  <script src="src/js/trainer/imageProcessing/passes/elasticDistortion/ElasticDistortion.js"></script>
+  <script src="src/js/trainer/imageProcessing/ImageTransformPipeline.js"></script>
+  <!-- IMAGE PROCESSING - preprocessing -->
+  <script src="src/js/preprocessing/InputLightRegulation.js"></script>
+  <script src="src/js/preprocessing/InputMix0.js"></script>
+  <script src="src/js/preprocessing/InputMix1.js"></script>
+  <script src="src/js/preprocessing/InputCut4.js"></script>
+
+
+  <!-- PROBLEM PROVIDERS -->
+  <script>
+    window['PROBLEMPROVIDERS'] = {};
+  </script>
+  <script src="src/js/problemProviders/ThreeMaterials.js"></script>
+  <script src="src/js/problemProviders/imageDataset/ImageDatasetTrainer.js"></script>
+  <script src="src/js/problemProviders/objectDetection/ObjectDetectionTrainer.js"></script>
+  <script src="src/js/problemProviders/threejsExample/ThreejsExampleTrainer.js"></script>
+  <script src="src/js/problemProviders/PooledProblemProvider.js"></script>
+  <script src="src/js/problemProviders/Problem.js"></script>
+
+
+  <!-- SHADER DEBUGGER -->
+  <script src="src/js/share/GLDebugger.js"></script>
+
+
+  <!-- THREE.js -->
+  <script src="libs/three/v119/threeTweaked.js"></script>
+  <!-- THREE.js loaders: -->
+  <script src="libs/three/v119/GLTFLoader.js"></script>
+  <script src="libs/three/v131/examples/js/loaders/OBJLoader.js"></script>
+  <script src="libs/three/v131/examples/js/loaders/MTLLoader.js"></script>
+  <script src="libs/three/v131/examples/js/shaders/CopyShader.js"></script>
+  <script src="libs/three/v131/examples/js/shaders/CopyScaleShader.js"></script>
+  <!-- THREE.js postprocessing: -->
+  <script src="libs/three/v131/examples/js/postprocessing/EffectComposerTweaked.js"></script>
+  <script src="libs/three/v131/examples/js/postprocessing/RenderPass.js"></script>
+  <script src="libs/three/v131/examples/js/postprocessing/ShaderPass.js"></script>
+  <!-- THREE.js misc: -->
+  <script src="libs/three/v131/examples/js/utils/SkeletonUtils.js"></script>
+
+
+  <!-- LOGGER -->
+  <script src="libs/Logger/Logger.js"></script>
+  <link rel="stylesheet" type="text/css" href="libs/Logger/LoggerDark.css"/>
+  
+
+  <!-- JQUERY -->
+  <script src="libs/jquery/jquery-2.1.4.min.js"></script>
+  <script src="libs/jquery/jquery-custom-file-input.js"></script>
+
+
+  <!-- RANDOM GENERATOR -->
+  <script src="libs/simjs/random-0.26.js"></script>
+
+
+  <!--  CUSTOM LIBS:  -->
+  <script src="libs/custom/lib_random.js"></script>
+  <script src="libs/custom/lib_maths.js"></script>
+  <script src="libs/custom/lib_array.js"></script>
+  <script src="libs/custom/lib_vector2.js"></script>
+  <script src="libs/custom/lib_vector3.js"></script>
+  <script src="libs/custom/lib_ajax.js"></script>
+  <script src="libs/custom/lib_url.js"></script>
+  <script src="libs/custom/lib_three.js"></script>
+  <script src="libs/custom/lib_date.js"></script>
+
+
+  <!-- CODEMIRROR //-->
+  <!-- JSHINT (dependancy of jshint addon) -->
+  <script src="libs/jsHint/2_10_3/dist/jshint.js"></script>
+  
+  <!-- CODEMIRROR -->
+  <script src="libs/codemirror/5_49_2/lib/codemirror.js"></script>
+  <script src="libs/codemirror/5_49_2/addon/edit/matchbrackets.js"></script>
+  <script src="libs/codemirror/5_49_2/addon/comment/comment.js"></script>
+  <script src="libs/codemirror/5_49_2/addon/comment/continuecomment.js"></script>
+  <script src="libs/codemirror/5_49_2/addon/search/search.js"></script>
+  <script src="libs/codemirror/5_49_2/addon/search/searchcursor.js"></script>
+  <script src="libs/codemirror/5_49_2/addon/search/match-highlighter.js"></script>
+  
+  <!-- HINTER -->
+  <script src="libs/codemirror/5_49_2/addon/hint/javascript-hint.js"></script>
+
+  <!-- LINTER -->
+  <script src="libs/codemirror/5_49_2/addon/lint/lint.js"></script>
+  <script src="libs/codemirror/5_49_2/addon/lint/javascript-lint.js"></script>
+
+  <!-- CODEMIRROR MISC -->
+  <script src="libs/codemirror/5_49_2/mode/javascript/javascript.js"></script>
+  <script src="libs/codemirror/5_49_2/addon/edit/matchbrackets.js"></script>
+  <script src="libs/codemirror/5_49_2/addon/display/fullscreen.js"></script>
+
+  <!-- CODEMIRROR STYLE -->
+  <link rel="stylesheet" type="text/css" href="libs/codemirror/5_49_2/lib/codemirror.css"/>
+  <link rel="stylesheet" type="text/css" href="libs/codemirror/5_49_2/addon/display/fullscreen.css">
+  <link rel="stylesheet" type="text/css" href="libs/codemirror/5_49_2/addon/lint/lint.css"/>
+  <link rel="stylesheet" type="text/css" href="libs/codemirror/5_49_2/theme/cobalt.css"/>
+
+
+  <!-- ENTRY POINT -->
+  <script src="src/js/trainer/main.js"></script>
+
+
+  <!-- STYLE -->
+  <link href='//fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="css/trainer.css"/>
+</head>
+
+
+<body>
+  <div class='columnsContainer'>
+    <div class='column columnLeft'>
+      <!-- BEGIN CODE SECTION -->
+      <div class="widget code" id="widgetCode">
+        <div class="title">.: TRAINING SCRIPT :.</div>
+        <div class="inside codeTextareaContainer" id="codeview">
+          <textarea id="codeviewTextarea" name="codeview" class="textarea">
+          </textarea>
+        </div> 
+      </div>
+
+      <!-- END CODE SECTION -->
+    </div>
+
+
+    <div class='column columnRight'>
+
+      <!-- BEGIN CONTROLS SECTION -->
+      <div id="widgetControls" class="widget controls">
+        <div class="title">.: CONTROLS :.</div>
+        <div class="inside">
+          <a id='buttonRun'>RUN</a>
+          <a id='buttonPause'>PAUSE</a>
+          <a id='buttonStep'>STEP</a>
+          <a id='buttonSave'>SAVE</a>
+          <a id='buttonOpen'>OPEN</a>
+          <div class='statusLabel'>Status:
+            <div id='status' class='status'>Idle</div>
+          </div>
+        </div>
+        
+        <div id="fileOpen" class="fileOpen">
+          <a class='fileOpenClose' onclick="$('#fileOpen').hide()">CLOSE X</a>
+          <input id='fileOpenInput' type='file' value='fileOpenFile'/><br/><br/>
+          <input id='fileOpenCodeOnly' type='checkbox'> Import code only
+        </div>
+      </div>
+      <!-- END CONTROLS SECTION -->
+      
+
+      <!-- BEGIN MONITORING SECTION -->
+      <div id="widgetMonitoring" class="widget monitoring">
+        <div class="title">.: MONITORING :.</div>
+
+        <div id='monitoringLoading'>
+          Run a training script, interesting stuff will show up here.
+        </div>
+
+        <div class='tabs monitoringContent'>
+          <div class='tab selectedTab' id='liveViewTab'>LIVE GPU VIEW</div>
+          <div class='tab' style='display: none' id='graphViewTab'>LIVE GRAPH VIEW</div>
+          <div class='tab' id='statsTab'>STATS</div>
+          <div class='tab' id='testTab'>TEST</div>
+        </div>
+
+        <div class="inside monitoringContent" id='liveViewTabContent'>
+          <canvas id='resultLiveCanvas' class='monitoringLiveCanvas' height='512' width='512'></canvas>
+
+          <div class="monitoringBox" id='monitoringLayers'>
+          </div>
+
+          <div class="monitoringBox" id='monitoringTextures'>
+          </div>
+
+          <div class='monitoringBox monitoringDataTexture'>
+            <div class='monitoringRGBA' style='color: red'>
+              <input type='radio' name='resultRGBA' value='0' checked="true"/>RED CHANNEL
+            </div>
+            <div class='monitoringRGBA' style='color: green'>
+              <input type='radio' name='resultRGBA' value='1'/>GREEN CHANNEL
+            </div>
+            <div class='monitoringRGBA' style='color: #3080FF'>
+              <input type='radio' name='resultRGBA' value='2'/>BLUE CHANNEL
+            </div>
+            <div class='monitoringRGBA' style='color: #aaa'>
+              <input type='radio' name='resultRGBA' value='3'/>ALPHA CHANNEL
+            </div>
+          </div>
+
+
+          <div class="monitoringBox monitoringDataTexture">
+            <form oninput="scale.value=resultScale.value; offset.value=resultOffset.value">
+
+              <div class='monitoringLiveGpuViewLabel'>Display scale (10<sup>x</sup>):</div><output name="scale" for="resultScale">0</output><br/>
+              <input id="resultScale" name="resultScale" type="range" step="1" min="-4" max="16" value="0" />
+
+              <br/>
+              <div class='monitoringLiveGpuViewLabel'>Display offset (0 then 10<sup>x</sup>):</div><output name="offset" for="resultOffset">0</output><br/>
+              <input id="resultOffset" type="range" step="1" min="-3" max="3" value="-3" />
+
+              <br/>
+              <div class='monitoringLiveGpuViewLabel'>Display absolute value:</div><input type='checkbox' id='resultAbs'/>
+            </form>
+          </div>
+
+          <div class="monitoringBox monitoringDataTexture">
+            <div class='monitoringLiveGpuViewLabel'>Floating Point Specials:</div>
+              <div style='display: inline; color: red'>NaN</div>, 
+              <div style='display: inline; color: lime'>Inf</div>
+          </div>
+
+        </div>
+
+
+        <div class="inside monitoringContent" id='graphViewTabContent'>
+          <div id='graphClasses'></div>
+        </div>
+
+
+        <div class="inside monitoringContent statResult" style='display: none' id='statsTabContent'>
+          <label>Minibatchs counter:</label><div id="statResult_nMinibatchs" class="value"></div>
+          <label>Learning speed (img/s):</label><div id="statResult_learningSpeed" class="value"></div>
+          <label>Learning rates (per layer):</label><div id="statResult_learningRate" class="value"></div>
+          <label>Learning rates factor:</label><div id="statResult_learningRateDecay" class="value">-</div>
+          <label>Best test:</label><div id="statResult_bestTest" class="value"></div><div class='testInfos' id='statResult_bestTestInfos'></div>
+          <label>Last test:</label><div id="statResult_lastTest" class="value"></div><div class='testInfos' id='statResult_lastTestInfos'></div>
+          <label><button id='statResult_downloadLearningCurve'>Download learning curve data</button></label>
+        </div>
+
+
+        <div class="inside monitoringContent" style='display: none' id='testTabContent'>
+          <div id='graphTests'></div>
+          <i>Vertical: Success rate, Hzt: time</i>
+        </div>
+      </div>
+      <!-- END MONITORING SECTION -->
+
+
+      <!-- BEGIN CONSOLE LOG SECTION -->
+      <div id="widgetLogs" class="widget logs">
+        <div class="title">.: LOGS :.</div>
+
+        <div class="inside">
+          <div id='Logger'>
+          </div>
+        </div>
+      </div>
+      <!-- END CONSOLE LOG SECTION -->
+
+    </div>
+  </div>
+</body>
+
+</html>

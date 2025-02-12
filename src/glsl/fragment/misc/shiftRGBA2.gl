@@ -1,0 +1,39 @@
+uniform sampler2D uun_source;
+
+uniform float uun_isInv;
+
+varying vec2 vUV;
+
+
+
+// weights grouped by toLayer
+// inputs grouped by fromLayer
+
+void main(void) {
+  
+  // input signal:
+  vec4 from = texture2D(uun_source, vUV);
+
+  // compute shift offset:
+  vec2 xyPos = floor(gl_FragCoord.xy);
+  vec3 offsets = mix(vec3(0., 1., 2.), vec3(2., 1., 0.), uun_isInv * vec3(1.));
+  vec3 xPosOffsets = xyPos.x * vec3(1.) + offsets;
+  
+  float isKeep = mod(xyPos.y, 2.);
+  vec4 s = vec4(isKeep, (1. - isKeep) * step(mod(xPosOffsets, vec3(3.)), vec3(0.5)));
+
+  mat4 shiftMatrix = mat4(
+    from.rgba,
+    from.gbar,
+    from.barg,
+    from.argb
+  );
+  
+  // apply shift offset:
+  gl_FragColor = shiftMatrix * s;
+
+  // DEBUG ZONE:
+  //gl_FragColor = s;
+
+} 
+ 

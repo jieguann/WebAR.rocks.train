@@ -1,0 +1,17 @@
+// Used in connectivity for regularization
+// to compute weights sum between layers
+
+uniform sampler2D uun_source, uun_destination;
+uniform float uun_alpha;
+
+const vec4 ONE4 = vec4(1.);
+
+varying vec2 vUV;
+
+
+void main(void) {
+  vec4 sourceColor = texture2D(uun_source, vUV);
+  vec4 destinationColor = texture2D(uun_destination, vUV);
+
+  gl_FragColor = mix(destinationColor, sourceColor, uun_alpha * ONE4);
+} 

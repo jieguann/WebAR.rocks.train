@@ -1,0 +1,10 @@
+//APPLY BIAS (FEEDFORWARD)
+uniform sampler2D uun_source;
+uniform float uun_toSparsity2;
+
+varying vec2 vUV;
+
+void main(void) {
+    gl_FragColor=uun_toSparsity2*texture2D(uun_source, vUV);
+} 
+ 

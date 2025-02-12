@@ -1,0 +1,17 @@
+uniform sampler2D uun_signal;
+uniform float uun_floatMax;
+
+varying vec2 vUV;
+
+const vec4 ZERO4 = vec4(0.);
+const vec4 ONE4 = vec4(1.);
+const float LEAK = 0.0001;
+
+void main(void) {
+  vec4 inputSignal = texture2D(uun_signal, vUV);
+
+  vec4 leak = inputSignal * LEAK; // leaky relu
+  vec4 outputSignal = leak + clamp(inputSignal, ZERO4, uun_floatMax*ONE4/256.);
+
+  gl_FragColor = outputSignal;
+} 

@@ -1,0 +1,353 @@
+/*====================== GENERAL ========================*/
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url('openSans.woff') format('woff');
+}
+
+html {
+  overflow: hidden;
+  height: 100vh;   
+}
+
+body {
+  font-size: 10pt;
+  font-family: 'Open Sans', sans-serif;
+  margin: 0px;
+  background-color: #121212;
+  overflow: hidden;
+  height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+} 
+
+button {
+  cursor: pointer;
+  border: 1px solid #145c9b;
+  color: white;
+  background-color: black;
+}
+
+
+
+/*====================== LAYOUT ========================*/
+
+.columnsContainer {
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+}
+.column {
+  height: 100%;
+  display: block;
+  margin: 0px;
+  padding: 0px;
+  flex-grow: 1;
+}
+.columnLeft {
+  min-width: 50%;
+}
+.columnRight {
+  max-width: 800px;
+}
+
+/*====================== WIDGET GENERAL ========================*/
+
+
+.widget {
+  display: block;
+  color: #eee;
+  /* border: 1px solid black; */
+  margin: 10px;  
+}
+
+.widget .inside {
+  /*background-color: #f5f5f5;*/
+  background-color: #002240;
+  border-left: 1px solid #145c9b;
+  border-right: 1px solid #145c9b;
+  border-bottom: 1px solid #145c9b;
+}
+
+.widget .title {
+  border-top-left-radius:   1em 5em;
+  border-top-right-radius:  1em 5em;
+  font-weight: bold;
+  text-align: center;
+  width: calc(100% - 2px);
+  /*background-color: #01afec;*/
+  background-color: black;
+  border-top: 1px solid #145c9b;
+  border-left: 1px solid #145c9b;
+  border-right: 1px solid #145c9b;
+  font-size: 14pt;
+  color: white;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.widget .title a.titleButton {
+  float: right; display: block; cursor: pointer;
+  border-left: 1px solid white;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: white;
+}
+.widget .title a.titleButton:hover {
+  background-color: #24648a;
+}
+
+/*====================== CODE ========================*/
+
+.code {
+  height: calc(100% - 42px);
+}
+
+.code .CodeMirror {
+  height: 100%!important;
+}
+
+.codeTextareaContainer{
+   height: 100%
+}
+
+
+/*====================== CONTROLS ========================*/
+
+#buttonRun {
+  margin-left: 1px;
+}
+.controls {
+  
+}
+
+.controls .inside {
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+}
+.controls .inside > a {
+  margin-left: 2px;
+}
+
+.controls a {
+  width: 90px; font-size: 14pt;
+  margin: 1px;
+  cursor: pointer;
+  display: inline-block;
+  color: #eee;
+  /*background-color: #0F2650;*/
+  margin-left: -1px;
+  margin-right: -1px;
+}
+
+.controlsButtonDisabled {
+  pointer-events: none;
+  color: #999!important;
+}
+
+.controls a:hover {
+  color: #ffffff;
+  cursor: pointer;
+  background-color: #3f64ac;
+}
+
+.controls .statusLabel {
+  display: inline-block;
+  margin-top: 6px;
+  width: 190px;
+}
+
+.controls .status {
+  display: inline;
+  font-weight: bold;
+}
+
+.controls .fileOpen .fileOpenClose{
+  margin-top: -50px;
+  float: right;
+  text-align: center;
+  padding-bottom: 3px;
+}
+
+.controls .fileOpen{
+  display: none;
+  position: fixed; background-color: #01afec; border: 1px solid white;
+  top: 50%; left: 50%;
+  width: 400px; height: 80px;
+  padding-top: 50px;
+  padding-left: 100px;
+  margin-left: -200px; margin-top: -50px;
+  z-index: 200;
+}
+
+/*====================== MONITORING ========================*/
+
+.monitoring {
+  margin-top: 20px;
+  height: calc(100% - 80px - 250px);
+}
+
+.monitoring .inside {
+  height: calc(100% - 53px);
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+#monitoringLoading {
+  border-right: 1px solid #145c9b;
+  border-left: 1px solid #145c9b;
+  border-bottom: 1px solid #145c9b;
+  height: calc(100% - 32px);
+  padding-top: 32px;
+  box-sizing: border-box;
+  text-align: center;
+  font-style: italic;
+}
+
+.monitoringContent {
+  display: none!important;
+}
+
+.monitoring .tabs {
+  border-right: 1px solid #145c9b;
+  background-color: #black;
+  color: #999;
+  overflow: auto;
+}
+
+.monitoring .tab {
+  float: left;
+  width: 120px;
+  cursor: pointer;
+  text-align: center;
+  border-right: 1px solid #145c9b;
+  border-left: 1px solid #145c9b;
+  margin-right: -1px;
+  border-top: 1px solid #145c9b;
+  border-bottom: 1px solid white;
+}
+
+.monitoring .selectedTab {
+  background-color: #002040;
+  border-top: 1px solid white;
+  z-index: 2;
+  border-bottom: 1px solid #002040;
+  color: white;
+}
+
+.monitoring .monitoringLiveCanvas {
+  float: left;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 1px;
+  background-color: #000;
+}
+
+.monitoringLiveGpuViewLabel {
+  display: inline-block;
+  margin-left: 4px;
+  min-width: 150px;
+}
+
+.monitoringLiveGpuViewLabel {
+  margin-left: 4px;
+}
+
+#monitoringLayers {
+  column-count: 2;
+}
+
+.monitoring .monitoringBox {
+  margin-left: -50px;
+  margin-top: 5px;
+  float: right;
+  clear: right;
+  width: calc(100% - 524px);
+  font-size: 8pt;
+  border: 1px solid #145c9b;
+  background-color: black;
+}
+
+.monitoring input[type="range"]{
+  width: calc(100% - 6px);
+}
+
+.monitoring .monitoringRGBA {
+  float: left;
+  width: 110px;
+}
+
+.monitoring .monitoringLayer {
+  clear: left;
+  float: left;
+}
+
+.monitoring .monitoringTexture {
+  clear: left;
+  float: left;
+}
+
+.monitoring .statResult label {
+  font-weight: bold;
+  float: left;
+  width: 200px;
+  margin-top: 15px;
+  margin-left: 20px;
+  clear: left;
+}
+
+.monitoring .statResult .value {
+  display: inline-block;
+  margin-top: 15px;
+  float: left;
+}
+
+.testInfos {
+  float: left;
+  margin-top: 10px;
+  margin-left: 16px;
+  color: #bbb;
+  font-size: 8pt;
+}
+
+.monitoring .monitoringExpected  {
+  width: 40px;
+  float: right;
+  border: 0px;
+}
+
+#testResult {
+  padding-left: 12px;
+  padding-top: 12px;
+  box-sizing: border-box;
+}
+
+#graphClasses {
+  padding-left: 12px;
+  padding-top: 12px;
+  box-sizing: border-box;
+}
+
+/*====================== LOGS ========================*/
+
+.logs {
+  height: 258px;
+}
+
+.logs .inside {
+  height: calc(100% - 50px);
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+/* ======= FEEDFORWARD =====*/
+
+.debugCanvas{
+  position: fixed; top: 0px; right: 15px;
+}

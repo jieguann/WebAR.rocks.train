@@ -1,0 +1,15 @@
+// APPLY BIAS (FEEDFORWARD)
+
+uniform sampler2D uun_source, uun_bias;
+uniform float uun_toSparsity2, uun_floatMax;
+
+const vec4 ONE4 = vec4(1.);
+
+varying vec2 vUV;
+
+void main(void) {
+  vec4 inputSummed = texture2D(uun_bias, vUV) + uun_toSparsity2 * texture2D(uun_source, vUV);
+
+  gl_FragColor = clamp(inputSummed, -uun_floatMax*ONE4, uun_floatMax*ONE4);
+} 
+ 

@@ -1,0 +1,18 @@
+// return reduced and centered value for a color
+
+uniform sampler2D uun_source, uun_mean, uun_squaresMean;
+
+varying vec2 vUV;
+
+const vec4 ONE4 = vec4(1.,1.,1.,1.);
+const float VMIN = 0.1;
+
+void main(void) {
+  vec4 mean = texture2D(uun_mean, vUV);
+  vec4 squareMean = texture2D(uun_squaresMean, vUV);
+  vec4 src = texture2D(uun_source, vUV);
+
+  vec4 variance = max(ONE4*VMIN, squareMean - mean*mean);
+  vec4 sigma = sqrt(variance);
+  gl_FragColor = (src - mean) / sigma;
+} 

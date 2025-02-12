@@ -1,0 +1,12 @@
+precision highp float;
+attribute vec2 aat_position;
+attribute vec4 aat_value;
+
+varying vec4 vColor;
+
+void main(void) {
+  gl_PointSize = 1.;
+    
+  gl_Position = vec4(aat_position, 0., 1.);
+  vColor = aat_value;
+}

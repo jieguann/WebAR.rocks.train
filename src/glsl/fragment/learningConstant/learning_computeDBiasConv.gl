@@ -1,0 +1,61 @@
+// UPDATE WEIGHTS(LEARNING)
+// deltas are in the to ref
+// inputs are in the from ref
+// weights are conv, more in the to ref
+// output is in the weight ref
+
+uniform sampler2D uun_deltas;
+uniform float uun_SGDLearningRate, uun_fromSize, uun_toSize, uun_kernelsCount, uun_toSparsity, uun_floatMax;
+
+const vec4 ONE4 = vec4(1.,1.,1.,1.); 
+const vec4 ZERO4 = vec4(0.,0.,0.,0.);
+const vec2 ONE2 = vec2(1.,1.);
+
+const float KERNELCLUSTERSIZE = 1.1111; // will be replaced
+
+varying vec2 vUV;
+
+
+void main(void) {
+
+  vec2 uv = vUV;
+  vec2 kernelCo = floor(uun_kernelsCount*uv); // in which output kernel we are. 
+  vec2 uvPatch = uun_kernelsCount*uv - kernelCo; // uv in a square inside a same kernel element. in [0,1[
+  vec2 patchCo = floor(uvPatch*uun_toSparsity); // between 0 and sparsity
+
+  float kernelClusterSize = KERNELCLUSTERSIZE; // uun_toSize / uun_kernelsCount
+  float stride = uun_kernelsCount * uun_fromSize/uun_toSize; // in from pixels
+      
+  vec4 diAcc = ZERO4; // accumulation of delta
+
+  vec2 neuronIndex, uvNeuronIndex;
+  vec2 uvTo;
+  vec4 inp, delta;
+
+  //SUM OVER A CLUSTER OF TO_NEURONS SHARING THE SAME WEIGHT:
+  for (float i=0.0; i<KERNELCLUSTERSIZE; i+=1.0){
+    for (float j=0.0; j<KERNELCLUSTERSIZE; j+=1.0){
+      neuronIndex = vec2(i,j); 
+      
+      // TO layer: loop over a square, matching a kernel
+      vec2 neuronIndexTo = neuronIndex;
+      uvTo = (neuronIndexTo + kernelCo * kernelClusterSize) / uun_toSize; // in [0, 1[
+      uvTo = mod(uvTo+ONE2, ONE2);
+
+      delta = texture2D(uun_deltas, uvTo);
+
+      diAcc += delta;
+    } //end loop on j
+  } //end loop on i
+
+  gl_FragColor = clamp( -uun_SGDLearningRate*diAcc, -uun_floatMax*ONE4, uun_floatMax*ONE4);
+
+  // DEBUG ZONE:
+  //gl_FragColor=vec4(neuronIndex,0.,1.);
+  //gl_FragColor=vec4(uvPatch,0.,0.);
+  //gl_FragColor=vec4(inp.xy,delta.xy);
+  //gl_FragColor=texture2D(uun_inputs, vUV);
+
+  //FOR CONNECTIVITYCONVDEBUG
+  //gl_FragColor=vec4(uvFrom,uvTo);
+}

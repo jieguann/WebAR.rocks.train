@@ -1,0 +1,10 @@
+uniform sampler2D uun_source;
+uniform vec2 uun_scale, uun_offset;
+
+varying vec2 vUV;
+
+void main(void) {
+  vec2 uv = (vUV * uun_scale) + uun_offset;
+  gl_FragColor = texture2D(uun_source, uv);
+} 
+ 

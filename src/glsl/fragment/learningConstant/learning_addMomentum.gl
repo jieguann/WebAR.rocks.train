@@ -1,0 +1,16 @@
+// UPDATE WEIGHTS(LEARNING)
+uniform sampler2D uun_dweights, uun_previousDweights;
+uniform float uun_SGDMomentum, uun_floatMax;
+
+const vec4 ONE4 = vec4(1.,1.,1.,1.); 
+
+varying vec2 vUV;
+
+void main(void) {
+
+  vec4 dw = texture2D(uun_dweights, vUV);
+  vec4 previousDw = texture2D(uun_previousDweights, vUV);
+  dw += uun_SGDMomentum * previousDw;
+
+  gl_FragColor = clamp(dw, -uun_floatMax*ONE4, uun_floatMax*ONE4);
+}

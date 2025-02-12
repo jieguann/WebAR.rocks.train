@@ -1,0 +1,15 @@
+//APPLY WEIGHTS (FEEDFORWARD)
+uniform sampler2D uun_weights, uun_inputs, uun_bias;
+
+varying vec2 vUV;
+
+
+void main(void) {
+
+  vec4 we = texture2D(uun_weights, vUV); //weight
+  vec4 from = texture2D(uun_inputs, vUV);  //input signal
+  vec4 bs = texture2D(uun_bias, vUV);  //bias
+
+  gl_FragColor = we * from + bs;
+} 
+ 

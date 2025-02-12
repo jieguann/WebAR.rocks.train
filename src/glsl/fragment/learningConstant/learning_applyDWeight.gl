@@ -1,0 +1,20 @@
+// UPDATE WEIGHTS(LEARNING)
+uniform sampler2D uun_weights, uun_dweights;
+uniform float uun_l2Decay, uun_floatMax;
+
+const vec4 ONE4 = vec4(1.); 
+
+varying vec2 vUV;
+
+void main(void) {
+
+  vec4 w = texture2D(uun_weights, vUV);
+  vec4 dw = texture2D(uun_dweights, vUV);
+
+  // Compute the regularization factor:
+  float decayFactor = (1. - uun_l2Decay);
+
+  vec4 newWeight = w * decayFactor + dw;
+
+  gl_FragColor = clamp(newWeight, -uun_floatMax*ONE4, uun_floatMax*ONE4);
+}

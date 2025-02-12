@@ -1,0 +1,31 @@
+// APPLY WEIGHTS (FEEDFORWARD)
+
+uniform sampler2D uun_weights, uun_inputs, uun_toIndices, uun_weightsMask;
+uniform float uun_floatMax;
+
+varying vec2 vUV;
+
+const vec4 ONE4 = vec4(1.,1.,1.,1.);
+
+void main(void) {
+
+  vec4 to = texture2D(uun_toIndices, vUV);
+
+  vec2 uvWeight = to.rg;
+  vec2 uvFrom = to.ba;
+
+  vec4 we = texture2D(uun_weights, uvWeight); // weight
+  vec4 weMask = texture2D(uun_weightsMask, uvWeight); // weight mask
+  vec4 from = texture2D(uun_inputs, uvFrom);  // input signal
+
+  gl_FragColor = clamp(we * weMask * from, -uun_floatMax*ONE4, uun_floatMax*ONE4);
+    
+  // DEBUG ZONE:
+  //gl_FragColor = vec4(1.,0.,0.,1.);
+  //gl_FragColor = texture2D(inputs, vUV);
+  //gl_FragColor = vec4(neuronUV, 0.,1.);
+  //gl_FragColor = vec4(uvNormalized, 0.,1.);
+  //gl_FragColor = vec4(uv, 0.,1.);
+  //gl_FragColor = inputSignal;
+} 
+ 

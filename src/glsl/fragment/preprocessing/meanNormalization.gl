@@ -1,0 +1,31 @@
+varying vec2 vUV;
+uniform sampler2D uun_source, uun_mask;
+uniform float uun_ds;
+
+const vec4 ONE4 = vec4(1.,1.,1.,1.);
+const vec2 ONE2 = vec2(1.,1.);
+
+void main(void) {
+
+  float zou = 0.;
+
+  vec2 dxy = ONE2*uun_ds;
+
+  vec2 ij, uv;
+  float xx, k, n=0.;
+
+  for (float i=-4.; i<=4.; i+=1.) {
+    for (float j=-4.; j<=4.; j+=1.) {
+      ij = vec2(i,j);
+      xx = length(ij)/2.;
+      k = exp(-xx*xx);
+      uv = vUV+dxy*ij;
+      zou += k*texture2D(uun_source, uv).r;
+      n += k;
+    }
+  }
+
+  vec4 maskColor = texture2D(uun_mask, vUV);
+  gl_FragColor = maskColor.a * ((texture2D(uun_source, uv).r-zou/n)) * ONE4;
+}  
+ 

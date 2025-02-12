@@ -1,0 +1,11 @@
+uniform sampler2D uun_first, uun_second;
+
+varying vec2 vUV;
+
+void main(void) {
+  vec4 colorFirst = texture2D(uun_first, vUV);
+  vec4 colorSecond = texture2D(uun_second, vUV);
+
+  gl_FragColor = (colorSecond - colorFirst);
+} 
+ 

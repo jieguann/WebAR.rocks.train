@@ -1,0 +1,23 @@
+// UPDATE WEIGHTS(LEARNING)
+uniform sampler2D uun_deltas, uun_inputs, uun_learningMask;
+uniform float uun_SGDLearningRate, uun_fromSize, uun_toSize, uun_floatMax;
+
+const vec4 ONE4 = vec4(1.,1.,1.,1.); 
+
+varying vec2 vUV;
+
+// weights are grouped by toLayer neurons
+void main(void) {
+
+  vec2 uvFrom = fract(vUV*uun_toSize); // between 0 and 1
+
+  vec4 i = texture2D(uun_inputs, uvFrom);
+  vec4 d = texture2D(uun_deltas, vUV);
+
+  float learningMask = texture2D(uun_learningMask, uvFrom).r;
+
+  gl_FragColor = clamp(-uun_SGDLearningRate * d * i * learningMask, -uun_floatMax*ONE4, uun_floatMax*ONE4);
+
+  // DEBUG ZONE:
+  // gl_FragColor=vec4(0.,0.,0.,0.);
+}

@@ -1,0 +1,58 @@
+.LoggerLine {
+  margin-left: 6px;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  white-space: pre;
+}
+
+.LoggerLineEven {
+  background-color: transparent;
+}
+
+.LoggerLineOdd {
+  background-color: #0a3860;
+}
+
+.LoggerLineDebug {
+  color: #aaa;
+}
+
+.LoggerLineInfo {
+  color: white;
+}
+
+.LoggerLineWarning {
+  color: yellow; font-weight: bold;
+}
+
+.LoggerLineError {
+  color: red; font-weight: bold;
+}
+
+.LoggerButtons {
+  position: fixed;
+  right: 27px;
+  cursor: pointer;
+}
+
+.LoggerButtons > button {
+  border: 1px solid #145c9b;
+  color: white;
+  background-color: black;
+  width: 70px;
+  float: right;
+  clear: right;
+}
+
+.LoggerFullScreen {
+  width: calc(100vw - 20px);
+  height: calc(100vh - 20px)!important;
+  position: fixed;
+  z-index: 10000;
+  top: 10px;
+  left: 10px;
+}
+
+.LoggerFullScreen > .LoggerButtons {
+
+}

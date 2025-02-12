@@ -1,0 +1,33 @@
+// APPLY WEIGHTS (FEEDFORWARD)
+// IN TRAINING ONLY
+
+uniform float uun_toSize, uun_fromSize, uun_floatMax, uun_isDebug2;
+uniform sampler2D uun_weights, uun_inputs;
+
+varying vec2 vUV;
+
+const vec4 ONE4 = vec4(1.);
+
+// weights grouped by toLayer
+// inputs grouped by fromLayer
+
+void main(void) {
+  // compute uvFrom:
+  vec2 uvFrom = fract(vUV * uun_toSize);
+
+  // compute uvWeight:
+  vec2 uvWeight = vUV;
+  float weightsSize = uun_toSize * uun_fromSize;
+  uvWeight = (0.5 + floor(weightsSize * vUV)) / weightsSize;
+  
+  // fetch texels:
+  vec4 we = texture2D(uun_weights, uvWeight); // weight
+  vec4 from = texture2D(uun_inputs, uvFrom);  // input signal
+
+  // tweak output for debugging purposes:
+  vec4 outpt = clamp(we * from, -uun_floatMax*ONE4, uun_floatMax*ONE4);
+  outpt = mix(outpt, vec4(uvWeight, uvFrom), uun_isDebug2);
+
+  gl_FragColor = outpt;
+} 
+ 

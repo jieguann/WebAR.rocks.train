@@ -1,0 +1,17 @@
+// APPLY WEIGHTS (FEEDFORWARD)
+
+uniform sampler2D uun_weights, uun_inputs;
+uniform float uun_floatMax;
+
+varying vec2 vUV;
+
+const vec4 ONE4 = vec4(1.,1.,1.,1.);
+
+void main(void) {
+
+  vec4 we = texture2D(uun_weights, vUV); // weight
+  vec4 from = texture2D(uun_inputs, vUV);  // input signal
+
+  gl_FragColor = clamp(we * from, -uun_floatMax*ONE4, uun_floatMax*ONE4);
+} 
+ 

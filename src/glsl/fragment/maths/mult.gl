@@ -1,0 +1,14 @@
+uniform sampler2D uun_first, uun_second;
+uniform float uun_alpha, uun_floatMax;
+
+const vec4 ONE4 = vec4(1.,1.,1.,1.);
+
+varying vec2 vUV;
+
+void main(void) {
+  vec4 colorFirst = texture2D(uun_first, vUV);
+  vec4 colorSecond = texture2D(uun_second, vUV);
+
+  gl_FragColor = clamp(colorFirst*pow(colorSecond, uun_alpha*ONE4), -uun_floatMax*ONE4, uun_floatMax*ONE4);
+} 
+ 

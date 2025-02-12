@@ -1,0 +1,36 @@
+uniform sampler2D uun_signal;
+
+varying vec2 vUV;
+
+const vec4 ONE4 = vec4(1.);
+const float SQRT_2_OVER_PI = 0.7978845608028654;
+const float A = 0.044715;
+
+
+vec4 tanh4(vec4 x) {
+  // FF fast version:
+  /*vec4 ex = exp(x);
+  vec4 r = (ex - ONE4/ex) / (ex + ONE4/ex);*/
+
+  // FP special robust version:
+  vec4 exa = exp(-abs(x));
+  vec4 exa2 = exa * exa;
+  //vec4 r = sign(x) * (ONE4/exa - exa) / (ONE4/exa + exa);
+  vec4 r = sign(x) * (ONE4 - exa2) / (ONE4 + exa2);
+
+  // for plotter:
+  //sign(x) * (1/exp(-abs(x)) - exp(-abs(x))) / (1/exp(-abs(x)) + exp(-abs(x)))
+  return r;
+}
+
+
+void main(void) {
+  vec4 inputSignal = texture2D(uun_signal, vUV);
+
+  vec4 polyInputSignal = inputSignal + (A*inputSignal)*inputSignal*inputSignal;
+  vec4 tanhInputSignal = tanh4(SQRT_2_OVER_PI * polyInputSignal);
+
+  gl_FragColor = 0.5 * inputSignal * (ONE4 + tanhInputSignal);
+  // for plotter:
+  // 0.5*x*(1 + tanh(0.7978845608028654* (x + 0.044715*x^3) ))
+} 

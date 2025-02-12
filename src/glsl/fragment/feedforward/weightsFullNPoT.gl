@@ -1,0 +1,50 @@
+// APPLY WEIGHTS (FEEDFORWARD)
+uniform float uun_toSize, uun_floatMax;
+uniform sampler2D uun_weights, uun_inputs, uun_bias;
+
+varying vec2 vUV;
+
+// vUV is along toLayer neurons
+// weights grouped by toLayer neurons
+// inputs grouped by fromLayer neurons
+// output grouped by toLayer neurons
+
+const vec4 ONE4 = vec4(1.,1.,1.,1.);
+const vec2 ZERO2 = vec2(0.,0.);
+const vec2 ONE2 = vec2(1.,1.);
+const vec2 HALF2 = vec2(0.5,0.5);
+const vec2 EPS2 = vec2(0.01, 0.01);
+
+const float SPARSITY = 1.1111; // will be replaced
+
+void main(void) {
+  vec4 sum = texture2D(uun_bias, vUV);
+
+  vec2 eps2 = EPS2 / uun_toSize;
+  vec2 xyTo = floor(vUV * uun_toSize + eps2);
+  float fromSize = SPARSITY;
+  float weightSize = fromSize * uun_toSize;
+
+  vec2 xyFrom = ZERO2;
+  for (float from_x=0.0; from_x<SPARSITY-0.0001; from_x+=1.0){ // sparsity is fromSize
+    xyFrom.x = from_x;
+
+    for (float from_y=0.0; from_y<SPARSITY-0.0001; from_y+=1.0){
+      xyFrom.y = from_y;
+      vec2 uvFrom = (xyFrom + HALF2) / fromSize;
+
+      vec2 xyWeight = xyTo * fromSize + xyFrom;
+      vec2 uvWeight = (xyWeight + HALF2) / weightSize;
+
+      sum += texture2D(uun_weights, uvWeight) * texture2D(uun_inputs, uvFrom);
+    } //end loop on patch_y
+  } //end loop on patch_x
+  
+
+  gl_FragColor = clamp(sum, -uun_floatMax*ONE4, uun_floatMax*ONE4);
+
+  // DEBUG ZONE:
+  //gl_FragColor=texture2D(uun_inputs, uvFrom);
+  //gl_FragColor=texture2D(uun_weights, uvFrom);
+} 
+ 
