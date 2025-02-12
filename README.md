@@ -153,6 +153,9 @@ We have already trained networks to detect and track:
 
 ## Documentation
 
+We strongly recommend following this tutorial before going further: [WebAR Application Tutorial: A Dragon Lights a Lighter](/tutorials/lighter_dragon_AR_webapp).
+
+
 ### Quick Start
 
 1. Clone this GitHub repository.
@@ -186,7 +189,10 @@ A full documentation of the training script API is forthcoming. For now, feel fr
 
 ### Tutorials
 
-A series of tutorials is included in this repository to help you get started.
+A tutorial is included in this repository to help you get started:
+
+* [A Dragon Lights a Lighter](/tutorials/lighter_dragon_AR_webapp)
+
 
 ### About the Code
 
