@@ -266,7 +266,7 @@ window['PROBLEMPROVIDERS']['ObjectDetectionTrainer'] = (function(){
 
       materials.forEach(function(material){
         if (matNames !== 'ALL' && 
-          !(material.name && matNames.indexOf(material.name.toUpperCase()) !== -1) ){
+          !(material.name && !matNames.includes(material.name))){
           return;
         }
         let mat = material;
@@ -313,6 +313,25 @@ window['PROBLEMPROVIDERS']['ObjectDetectionTrainer'] = (function(){
       });
 
       threeStuff.userData.envMapMaterials.push(mat);
+    });
+  }
+
+
+  function alter_map(threeStuff, matNames){
+    if (_noiseTextures.length === 0){
+      return;
+    }
+
+    // collect meshes where applying the map noise:
+    threeStuff.userData.noiseMap = true;
+    threeStuff.userData.noiseMapMeshes = [];
+    threeStuff.traverse(function(threeNode){
+      if (!threeNode.material){
+        return;
+      }
+      if (matNames === 'ALL' || matNames.includes(threeNode.material.name)){
+        threeStuff.userData.noiseMapMeshes.push(threeNode);
+      }
     });
   }
 
@@ -440,6 +459,7 @@ window['PROBLEMPROVIDERS']['ObjectDetectionTrainer'] = (function(){
     }
 
     add_envMap(threeMesh, trainingSet.envMapMats);
+    alter_map(threeMesh, trainingSet.alterMapMats)
     alter_bumpMap(threeMesh, trainingSet.alterBumpMapMats)
 
     threeMesh.userData.thetaRange = [-Math.PI, Math.PI];
@@ -818,31 +838,49 @@ window['PROBLEMPROVIDERS']['ObjectDetectionTrainer'] = (function(){
       console.log('ERROR: drawnMesh is undefined');
       debugger;
     }
+    const drawnMeshData = drawnMesh.userData;
 
-    if (drawnMesh.userData.envMapMaterials && _three.envMaps.length){
+    // apply random envmap:
+    if (drawnMeshData.envMapMaterials && _three.envMaps.length){
       const envMap = lib_array.pick_random(_three.envMaps);
-      drawnMesh.userData.envMapMaterials.forEach(function(threeMat){
+      drawnMeshData.envMapMaterials.forEach(function(threeMat){
         threeMat.envMap = envMap;
       });
-      drawnMesh.userData.envMapRot.rotate(Math.random() * Math.PI * 2);
+      drawnMeshData.envMapRot.rotate(Math.random() * Math.PI * 2);
     }
 
-    if (drawnMesh.userData.noiseBump){
+    // apply noise to the map:
+    if (drawnMeshData.noiseMap){
+      drawnMeshData.noiseMapMeshes.forEach(function(threeMesh){
+        const noiseTexture = lib_array.pick_random(_noiseTextures);
+        threeMesh.material.map = noiseTexture.texture;
+
+        // randomize texture application
+        noiseTexture.texture.offset.set(Math.random(), Math.random());
+        noiseTexture.texture.rotation = Math.random() * Math.PI * 2;
+        const scale = lib_random.get_floatMinMaxPow(noiseTexture.scaleRange[0], 1, noiseTexture.scalePow);
+        noiseTexture.texture.repeat.set(scale, scale);
+      });
+    }
+
+
+    // apply noise to material map:
+    if (drawnMeshData.noiseBump){
       const noiseTexture = lib_array.pick_random(_noiseTextures);
-      drawnMesh.userData.noiseBumpMaterials.forEach(function(threeMat){
+      drawnMeshData.noiseBumpMaterials.forEach(function(threeMat){
         const img = noiseTexture.texture.image;
         const a = img.width / img.height;
         const scaleMax = Math.min(1/a, noiseTexture.scaleRange[1]);
         const scaleUV = lib_random.get_floatMinMaxPow(noiseTexture.scaleRange[0], scaleMax, noiseTexture.scalePow);
         const noiseTheta = Math.random() * Math.PI * 2;
 
-        const uniforms = drawnMesh.userData.noiseBump;
+        const uniforms = drawnMeshData.noiseBump;
         uniforms.noiseBumpMap.value = noiseTexture.texture;
         uniforms.noiseTheta.value = noiseTheta;
         uniforms.noiseScale.value.set(scaleUV, scaleUV*a);
         uniforms.noiseOffset.value.set(Math.random(), Math.random());
         
-        drawnMesh.material.bumpScale = Math.random() * _picked.drawnTrainingSet.alterBumpMapScaleMax;
+        threeMat.bumpScale = Math.random() * _picked.drawnTrainingSet.alterBumpMapScaleMax;
       });
     }
 

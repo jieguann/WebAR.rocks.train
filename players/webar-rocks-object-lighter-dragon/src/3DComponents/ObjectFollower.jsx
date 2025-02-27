@@ -24,6 +24,7 @@ const ObjectFollower = forwardRef((props, ref) => {
   const [flameThrowOrigin, setFlameThrowOrigin] = useState([1, 1, 0])
 
   const objRef = useRef()
+  const objSceneRef = useRef()
   const dragonRef = useRef()
 
   useEffect(() => {
@@ -56,8 +57,8 @@ const ObjectFollower = forwardRef((props, ref) => {
   const update_dragonFlameThrowingPosition = (pos) => {
     // pos is in world coordinates
     // we need to put pos in the ObjectFollower ref
-    objRef.current.updateMatrixWorld()
-    _m4.copy(objRef.current.matrixWorld).invert()
+    objSceneRef.current.updateMatrixWorld()
+    _m4.copy(objSceneRef.current.matrixWorld).invert()
     pos.applyMatrix4(_m4)
 
     pos.add(FLAMETHROW_OFFSET)
@@ -77,33 +78,33 @@ const ObjectFollower = forwardRef((props, ref) => {
     <object3D ref={objRef} visible={false}>
       {
         (props.isInitialized && props.isDetected) && (
-          <>
-          {/*<hemisphereLight
-            groundColor={0x303030}
-            color={0xe0e0ff}
-            intensity={3}
-          />*/}
-          <ambientLight color={0xffffff} intensity={2} />
-          {/*<directionalLight
-            intensity={20}
-            position={[0,0,-1]}
-            color={0xffffff}
-          />*/}
-          <Dragon scale={2} pathDuration={2}
-            ref={dragonRef}
-            update_flameThrowingPosition={update_dragonFlameThrowingPosition}
-            onFlameThrowing={onDragonFlameThrowing}
-            onFlame={onFlame}
-            />
-          { (isFlameThrow ) && (
-            <FlameThrow scale={0.8} target={[0,0.1,0]}
-              radius={0.1} height={4} particleCount={1000}
-              origin={flameThrowOrigin} />
-          )}
-          { (isFlame ) && (
-            <Flame scale={0.3} speedFactor={3} growthSpeedFactor={1.5} />
-          )}
-          </>
+          <object3D ref={objSceneRef} position={[0.11,0.14,0]}>
+            {/*<hemisphereLight
+              groundColor={0x303030}
+              color={0xe0e0ff}
+              intensity={3}
+            />*/}
+            <ambientLight color={0xffffff} intensity={2} />
+            {/*<directionalLight
+              intensity={20}
+              position={[0,0,-1]}
+              color={0xffffff}
+            />*/}
+            <Dragon scale={2} pathDuration={2}
+              ref={dragonRef}
+              update_flameThrowingPosition={update_dragonFlameThrowingPosition}
+              onFlameThrowing={onDragonFlameThrowing}
+              onFlame={onFlame}
+              />
+            { (isFlameThrow ) && (
+              <FlameThrow scale={0.8} target={[0,0.1,0]}
+                radius={0.1} height={4} particleCount={1000}
+                origin={flameThrowOrigin} />
+            )}
+            { (isFlame ) && (
+              <Flame scale={0.2} speedFactor={3} growthSpeedFactor={1.5} />
+            )}
+          </object3D>
         )
       }
     </object3D>

@@ -1,11 +1,7 @@
-// training n°46 v0
-
-
 const settings = {
   debug: false
 };
 //settings.debug = true;
-
 
 
 // 3D OBJECTS SPECIFICATIONS:
@@ -14,15 +10,19 @@ const meshPath = 'trainingData/models3D/lighter/';
 const objects = [
   {
     label: 'LIGHTER',
-    distance: 2,
+    distance: 3, // distance lighter - camera. Decrease to zoom-in.
+                 // The object should be fully visible
     trainingSets:[
       {
         meshes: [
-          meshPath + 'LighterShort.glb',
-          meshPath + 'LighterLong.glb',
-          meshPath + 'LighterCasual.glb'
+          // meshes alternatives:
+          meshPath + 'lighterShort.glb',
+          meshPath + 'lighterLong.glb',
+          meshPath + 'lighterCasual.glb'
           ],
-        envMapMats: 'ALL',
+        envMapMats: 'ALL', // apply random envmap to all materials
+        // apply random noise texture to these materials:
+        alterMapMats: ['PlasticRed', 'PlasticBlue', 'PlasticGreen'],
         materialsTweakers: {
           'MetalSilver': function(mat){
             // randomize metallic materials
@@ -30,7 +30,6 @@ const objects = [
             mat.metalness = 0.7 + 0.3 * Math.random();
             mat.roughness = 0.5 * Math.random();
             mat.envMapIntensity = 1 + 5 * Math.random();
-            //mat.color.setHex(0xff0000); mat.metalness = 0;
           },
           'Plastic': function(mat){
             // randomize plastic materials
@@ -40,31 +39,18 @@ const objects = [
             mat.color.g = Math.random();
             mat.color.b = Math.random();
             mat.roughness = Math.random();
-            mat.envMapIntensity = 3 * Math.random();
-            //mat.color.setHex(0x00ff00); mat.metalness = 0;
+            mat.envMapIntensity = 0.5 + 4 * Math.random();
           }
         },
-        scale: 0.02,
-        thetaOffset: 180,
-        thetaRange: (settings.debug) ? [-120, 120] : [-120, 120],
+        scale: 0.02, // scale of the mesh
+        thetaOffset: 180, // angle around Y axis ( vertical ) in degrees
+        thetaRange: [-180, 180], // randomize angle around Y axis. In degrees
         probability: 1,
         isCenter: false
       }
     ]
   }
 ];
-
-const objectsLabels = [], objectsDistances = [];
-let objectsCount = 0;
-objects.forEach(function(obj){
-  if (!obj.label){
-    return;
-  }
-  ++objectsCount;
-  objectsLabels.push(obj.label);
-  objectsDistances.push(obj.distance);
-});
-
 
 
 // WE CREATE THE NEURAL NETWORK:
@@ -115,23 +101,18 @@ layers.push({connectivityUp: 'full', clampOutput: "mask",
 const d2r = Math.PI / 180; // degrees 2 radians
 const inputAspectRatio = 1;
 
-const rotZMax = (settings.debug) ? 30 : 30, // in degrees = roll
-    dxMax = 0.15, // 1 -> half of the window
-    dyMax = 0.15,
-    dsMax = 0.3,
-    phiRange = [20, 120]; // Pitch: First value: when looking down. 0 -> aligned to vt axis. second value: when looking hzt
+// camera parameters for tracking learning:
+const rotZMax = (settings.debug) ? 30 : 30; // camera roll in degrees
+const dxMax = 0.3;  // max translation along X axis. relative. 1 -> full viewport width
+const dyMax = 0.15; // max translation along Y axis. relative. 1 -> full viewport height
+const dsMax = 0.3;  // max scale delta 
+const phiRange = [20, 120]; // Pitch in degrees:
+                            // 1st value: when looking down. 0 -> aligned to vt axis (-Y)
+                            // 2nd value: when looking up. 180 -> aligned to vt axis (+Y)
 
 // build the neural net:
 const net = new NeuronNetwork({
-  exportData: {
-    splitYawComponents: true,
-    rollMax: rotZMax * d2r,
-    pitchRange: [phiRange[0] * d2r, phiRange[1] * d2r],
-    translationScalingFactors: [dxMax, dyMax, dsMax],
-    labels: objectsLabels,
-    distances: objectsDistances,
-    inputAspectRatio: inputAspectRatio // = width / height of the input
-  },
+  exportData: {},
   layers: layers
 });
 
@@ -217,14 +198,12 @@ const postprocessingPipeline = new ImageTransformPipeline([
   }]);
 
 
+// some random textures:
+const randomTextures = [
+  {image: 'trainingData/images/random/output_*.png', n: 2, scaleRange: [0.03, 0.3], scalePow: 2},
+];
 
 // CREATE THE PROBLEM:
-
-const rdmDistribution = {
-  type: 'powCentered',
-  pow: (settings.debug) ? 2 : 2
-};
-
 const problem = new Problem({
   provider: 'ObjectDetectionTrainer',
   preprocessing: preprocessingPipeline,
@@ -235,22 +214,22 @@ const problem = new Problem({
     // rendering position:
     phiRange: phiRange, // zenith angle of the camera. First value: when looking down. 0-> aligned to vt axis. second value: when looking hzt
     translationScalingFactors: [dxMax, dyMax, dsMax],
-    translationScalingFactorsDistributions: [rdmDistribution, rdmDistribution, 'uniform'],
+    translationScalingFactorsDistributions: ['uniform', 'uniform', 'uniform'],
     rotZ: {max: rotZMax, nSigmas: 4}, // in degrees - gaussian distribution
 
     // rendering output:
-    width: 512,
+    width: 512, // rendering resolution in pixels
     aspectRatio: inputAspectRatio,
     isSharedContext: true,
-    FOV: [20, 70],
+    FOV: [3, 10], // camera field of view randomization. In degrees
 
     // lighting and environment:
     pointLightNumberRange: [1, 2],
-    ambientLightIntensityRange: [0.0, 1.5],
+    ambientLightIntensityRange: [0.3, 2],
     updatePointLightsPeriod: (settings.debug) ? 10 : 100,
     pointLightMaxIntensity: 1,
     envMaps: true,
-    //noiseTextures: textures,
+    noiseTextures: randomTextures,
     
     // statistics:
     positiveProbability: (settings.debug) ? 1 : 0.7,
@@ -271,7 +250,7 @@ const trainer = new Trainer({
   problem: problem,
 
   testsCount: 5000,
-  testMinibatchsInterval: 20000,
+  testMinibatchsInterval: 10000,
   cost: 'quadratic',
   
   SGDLearningRate: 0.05,
@@ -287,5 +266,5 @@ const trainer = new Trainer({
 });
 
 
-// TRIGGER TRAINING:
+// START TRAINING:
 trainer.start(); 

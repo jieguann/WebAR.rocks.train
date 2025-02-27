@@ -12,7 +12,7 @@ import threeHelper from './contrib/WebARRocksObject/helpers/WebARRocksObjectThre
 import mediaStreamAPIHelper from './contrib/WebARRocksObject/helpers/WebARRocksMediaStreamAPIHelper.js'
 
 // import neural network model:
-import NN from './assets/neuralNets/NN_LIGHTER_0.json'
+import NN from './assets/neuralNets/NN_LIGHTER_5.json'
 
 // import ObjectFollower 3D Object:
 import ObjectFollower from './3DComponents/ObjectFollower'
@@ -73,7 +73,7 @@ const ARApp = (props) => {
       notHereFactor: 0.0,
       paramsPerLabel: {
         LIGHTER: {
-          thresholdDetect: 0.95
+          thresholdDetect: 1.0
         }
       }
     },
@@ -81,17 +81,17 @@ const ARApp = (props) => {
     detectOptions: {
       isKeepTracking: true,
       isSkipConfirmation: false,
-      thresholdDetectFactor: 1,
-      cutShader: 'median',
-      thresholdDetectFactorUnstitch: 0.1,
-      trackingFactors: [0.7, 0.7, 0.7]
+      thresholdDetectFactor: 1.2,
+      //cutShader: 'median',
+      thresholdDetectFactorUnstitch: 0.5,
+      trackingFactors: [0.6, 0.6, 0.6]
     },
 
     cameraFov: 0, // auto evaluation
     scanSettings:{
       nScaleLevels: 2,
-      overlapFactors: [3, 3, 4],
-      scale0Factor: 0.5
+      overlapFactors: [2, 2, 3],//[3, 3, 4],
+      scale0Factor: 0.4//0.5
     },
 
     followZRot: false,

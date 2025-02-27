@@ -28,7 +28,7 @@ const ObjectFollower = (props) => {
             We use DREI Edges to abstract THREE.EdgesGeometry */}
         <meshBasicMaterial color={0xff0000} wireframe={true} opacity={0} transparent={true} wireframeLinewidth={0} />
         <Edges
-          linewidth={1}
+          linewidth={4}
           scale={1}
           threshold={15} // Display edges only when the angle between two faces exceeds this value (default=15 degrees)
           color={0x00ff00}
