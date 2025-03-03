@@ -1,11 +1,23 @@
 
 # WebAR.rocks.train
 
-**Integrated Training Environment**: Train your own neural network models directly in your web browser.
+**6DoF Object detection and tracking in web browser**
 
-The main use case is **object detection and tracking**: you can train a neural network model to detect and track a real-world object (for example, a lighter). Once trained, this model can be used with [WebAR.rocks.object](https://github.com/WebAR-rocks/WebAR.rocks.object) to create a web-based augmented reality application. For instance, you could have a genie pop out of the lighter in augmented reality, as if it were a magic lamp.
+https://webar.rocks/videos/WebARRockTrainPresentationLR.mp4
 
-This software is not compatible with other deep learning frameworks (Google TensorFlow, Torch, Keras, etc.).
+Press play to see the video.
+
+
+Do you have a lighter? Let the dragon light it on our [live demo](https://webar.rocks/demos/lighter).
+
+
+## Introduction
+
+This repository hosts a full **Integrated Training Environment**. You can train your own neural network models directly in the web browser and interactively monitor the training process.
+
+The main use case is **6DoF object detection and tracking**: you can train a neural network model to detect and track a real-world object (for example, a lighter) with 6 Degrees of Freedom.. Once trained, this model can be used with [WebAR.rocks.object](https://github.com/WebAR-rocks/WebAR.rocks.object) to create a web-based augmented reality application. For instance, you could have a genie pop out of the lighter in augmented reality, as if it were a magic lamp.
+
+This software is not compatible with other deep learning frameworks (*Google TensorFlow*, *Torch*, *Keras*, etc.). It is standalone.
 
 ## Table of Contents
 
@@ -32,7 +44,7 @@ This software is not compatible with other deep learning frameworks (Google Tens
 ## Features
 
 - Neural network training for:
-  - **Object detection and tracking** (models can be used in [WebAR.rocks.object](https://github.com/WebAR-rocks/WebAR.rocks.object))
+  - **6DoF Object detection and tracking** (models can be used in [WebAR.rocks.object](https://github.com/WebAR-rocks/WebAR.rocks.object))
   - **Image classification** (for debugging and testing purposes)
 - Live monitoring of the training process through a web interface
 - Export trained neural networks as JSON files
@@ -139,7 +151,6 @@ Contact us at **contact__at__webar.rocks** if you need:
 - Neural network quantization (reducing model size by a factor of ~10)
 - Consultation on your workflow
 - Deployment of this software to AWS EC2 or building an optimized training setup
-- Commercial software licenses for WebAR.rocks.object
 
 We have already trained networks to detect and track:
 
