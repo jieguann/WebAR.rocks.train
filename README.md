@@ -3,7 +3,8 @@
 
 **6DoF Object detection and tracking in web browser**
 
-https://webar.rocks/videos/WebARRockTrainPresentationLR.mp4
+<video src='https://webar.rocks/videos/WebARRockTrainPresentationLR.mp4' width='100%'>
+</video>
 
 Press play to see the video.
 
