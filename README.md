@@ -3,6 +3,8 @@
 
 **6DoF Object detection and tracking in web browser**
 
+Better than a long explanation, a [short video](https://www.youtube.com/watch?v=XshRcbjj9hY):
+
 [![WebAR.rocks.train presentation](https://img.youtube.com/vi/XshRcbjj9hY/0.jpg)](https://www.youtube.com/watch?v=XshRcbjj9hY)
 
 Do you have a lighter? Let the dragon light it on our [live demo](https://webar.rocks/demos/lighter).
