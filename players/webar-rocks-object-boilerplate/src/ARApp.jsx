@@ -9,7 +9,11 @@ import threeHelper from './contrib/WebARRocksObject/helpers/WebARRocksObjectThre
 import mediaStreamAPIHelper from './contrib/WebARRocksObject/helpers/WebARRocksMediaStreamAPIHelper.js'
 
 // import neural network model:
-import NN from './assets/neuralNets/NN_LIGHTER_5.json'
+
+// Neural Network directly trained from WebAR.rocks.train/trainingScripts/Object3DLighter_0.js :
+import NN from './assets/neuralNets/Object3DLighter_2025-03-10_uncompressed.json'
+// Neural Network compressed by WebAR.rocks (contact-us for more information):
+//import NN from './assets/neuralNets/NN_LIGHTER_5.json'
 
 // import ObjectFollower 3D object:
 import ObjectFollower from './3DComponents/ObjectFollower'

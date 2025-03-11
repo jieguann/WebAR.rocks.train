@@ -3,14 +3,12 @@
 
 **6DoF Object detection and tracking in web browser**
 
-<video src='https://webar.rocks/videos/WebARRockTrainPresentationLR.mp4' width='100%'>
-</video>
-
-Press play to see the video.
-
+[![WebAR.rocks.train presentation](https://img.youtube.com/vi/XshRcbjj9hY/0.jpg)](https://www.youtube.com/watch?v=XshRcbjj9hY)
 
 Do you have a lighter? Let the dragon light it on our [live demo](https://webar.rocks/demos/lighter).
 
+
+---
 
 ## Introduction
 
@@ -18,7 +16,10 @@ This repository hosts a full **Integrated Training Environment**. You can train 
 
 The main use case is **6DoF object detection and tracking**: you can train a neural network model to detect and track a real-world object (for example, a lighter) with 6 Degrees of Freedom.. Once trained, this model can be used with [WebAR.rocks.object](https://github.com/WebAR-rocks/WebAR.rocks.object) to create a web-based augmented reality application. For instance, you could have a genie pop out of the lighter in augmented reality, as if it were a magic lamp.
 
-This software is not compatible with other deep learning frameworks (*Google TensorFlow*, *Torch*, *Keras*, etc.). It is standalone.
+This software is fully standalone. It does not require any third party machine learning framework (*Google TensorFlow*, *Torch*, *Keras*, etc.).
+
+
+---
 
 ## Table of Contents
 
@@ -34,6 +35,12 @@ This software is not compatible with other deep learning frameworks (*Google Ten
   - [Quick Start](#quick-start)
   - [Compatibility](#compatibility)
   - [The Training Script](#the-training-script)
+  - [Object tracking limitations](#object-tracking-limitations)
+    - [Object shape](#object-shape)
+    - [Object materials](#object-materials)
+    - [Object 3D Model](#object-3d-model)
+    - [Multiple objects](#multiple-objects)
+    - [Generatization vs specification](#generatization-vs-specification)
   - [Tutorials](#tutorials)
   - [About the Code](#about-the-code)
 - [References](#references)
@@ -165,7 +172,7 @@ We have already trained networks to detect and track:
 
 ## Documentation
 
-We strongly recommend following this tutorial before going further: [WebAR Application Tutorial: A Dragon Lights a Lighter](/tutorials/lighter_dragon_AR_webapp).
+**We strongly recommend following this tutorial before going further: [WebAR Application Tutorial: A Dragon Lights a Lighter](/tutorials/lighter_dragon_AR_webapp).**
 
 
 ### Quick Start
@@ -199,11 +206,44 @@ The [players](/players) and other WebAR.rocks libraries using trained neural net
 
 A full documentation of the training script API is forthcoming. For now, feel free to adapt one of the provided scripts in `/trainingScripts/` to suit your needs.
 
+
+### Object tracking limitations
+
+#### Object shape
+
+The target object must have an aspect ratio between 1/2.5 and 2.5. An object with an aspect ratio of 1 fits into a square (equal width and height). For example, the standard Red Bull can has an aspect ratio of 2.5 (height/diameter).
+
+Elongated objects, such as a fork, a pen, or a knife, do not meet this requirement. In such cases, it may be easier to target only a specific part of the object (e.g., the end of the fork). We only detect objects that fully fit within the camera's field of view (i.e., objects that are not partially visible).
+
+#### Object materials
+
+Highly reflective objects, such as shiny metallic items, are harder to detect. Similarly, refractive materials are more challenging due to their high variability.
+
+#### Object 3D Model
+
+The 3D model should be in one of the following file formats: .OBJ, .GLTF, or .GLB. The textures should have power-of-two dimensions, and their highest dimension (width or height) must be 2048 pixels or less.
+
+If necessary, the 3D model should embed the PBR textures (typically the metallic-roughness texture).
+
+We provide 3D modelling support.
+
+#### Multiple objects
+
+We can train a neural network to detect multiple objects simultaneously. The first detected object is then tracked (we currently do not support simultaneous multi-object tracking).
+
+We have not yet tested the system's limitations. The more objects you need to detect and track, the less accurate the neural network becomes, and this also depends on the similarity between the objects. It works reliably with three objects; for more than three, you will need to conduct additional tests.
+
+#### Generatization vs specification
+
+The more generic the object, the more challenging the task becomes. For instance, detecting a generic lighter is more difficult than detecting a specific lighter model. If you require a neural network that generalizes extensively, you must use multiple 3D models for the same target and apply *material tweakers* to randomly alter certain materials.
+
 ### Tutorials
 
 A tutorial is included in this repository to help you get started:
 
 * [A Dragon Lights a Lighter](/tutorials/lighter_dragon_AR_webapp)
+
+More to come! Stay tuned by following us on [Linkedin](https://www.linkedin.com/company/webar-rocks) or [X](https://x.com/WebARRocks).
 
 
 ### About the Code
@@ -230,7 +270,7 @@ For reference, *WebAR.rocks.train* is part of a larger project that includes oth
 - [WebAR.rocks GitHub Repositories](https://github.com/webAR-rocks)
 - [WebGL Academy (Tutorials on WebGL and THREE.js)](http://www.webglacademy.com)
 - [WebAR.rocks on LinkedIn](https://www.linkedin.com/company/webar-rocks)
-- [WebAR.rocks on Twitter](https://twitter.com/WebARRocks)
+- [WebAR.rocks on X](https://x.com/WebARRocks)
 
 ---
 
