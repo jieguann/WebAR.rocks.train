@@ -1,7 +1,7 @@
 
 # WebAR.rocks.train
 
-**6DoF Object detection and tracking in web browser**
+**Object detection, tracking, and 6DoF pose estimation in web browser**
 
 Better than a long explanation, a [short video](https://www.youtube.com/watch?v=XshRcbjj9hY):
 
@@ -16,7 +16,7 @@ Do you have a lighter? Let the dragon light it on our [live demo](https://webar.
 
 This repository hosts a full **Integrated Training Environment**. You can train your own neural network models directly in the web browser and interactively monitor the training process.
 
-The main use case is **6DoF object detection and tracking**: you can train a neural network model to detect and track a real-world object (for example, a lighter) with 6 Degrees of Freedom.. Once trained, this model can be used with [WebAR.rocks.object](https://github.com/WebAR-rocks/WebAR.rocks.object) to create a web-based augmented reality application. For instance, you could have a genie pop out of the lighter in augmented reality, as if it were a magic lamp.
+The main use case is **object detection and tracking and pose estimation**: you can train a neural network model to detect and track a real-world object (for example, a lighter) with 6 Degrees of Freedom.. Once trained, this model can be used with [WebAR.rocks.object](https://github.com/WebAR-rocks/WebAR.rocks.object) to create a web-based augmented reality application. For instance, you could have a genie pop out of the lighter in augmented reality, as if it were a magic lamp.
 
 This software is fully standalone. It does not require any third party machine learning framework (*Google TensorFlow*, *Torch*, *Keras*, etc.).
 
@@ -54,7 +54,7 @@ This software is fully standalone. It does not require any third party machine l
 ## Features
 
 - Neural network training for:
-  - **6DoF Object detection and tracking** (models can be used in [WebAR.rocks.object](https://github.com/WebAR-rocks/WebAR.rocks.object))
+  - **Object detection, tracking, and 6DoF pose estimation** (models can be used in [WebAR.rocks.object](https://github.com/WebAR-rocks/WebAR.rocks.object))
   - **Image classification** (for debugging and testing purposes)
 - Live monitoring of the training process through a web interface
 - Export trained neural networks as JSON files
