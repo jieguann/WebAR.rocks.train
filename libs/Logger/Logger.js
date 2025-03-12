@@ -37,7 +37,6 @@ const Logger = (function(){
     let argStr = 'undefined';
     switch(typeof(arg)){
       case 'object':
-        debugger;
         argStr = JSON.stringify(arg);
         break;
       case 'undefined':
