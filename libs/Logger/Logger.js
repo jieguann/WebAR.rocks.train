@@ -25,6 +25,31 @@ const Logger = (function(){
 
   let _isFullScreen = false, _jqFullScreenButton = null;
 
+
+  function stringify_arg(arg){
+
+    if (arg instanceof Error){
+      if (arg.stack){
+        return arg.stack;
+      }
+    }
+
+    let argStr = 'undefined';
+    switch(typeof(arg)){
+      case 'object':
+        debugger;
+        argStr = JSON.stringify(arg);
+        break;
+      case 'undefined':
+        break;
+      default:
+        argStr = arg.toString();
+        break;
+    };
+    return argStr;
+  }
+
+
   const that = {
     init: function(spec){
       if (!$){
@@ -92,17 +117,7 @@ const Logger = (function(){
 
         const arg = arguments[i];
         argsArray.push(arg);
-        let argStr = 'undefined';
-        switch(typeof(arg)){
-          case 'object':
-            argStr = JSON.stringify(arg);
-            break;
-          case 'undefined':
-            break;
-          default:
-            argStr = arg.toString();
-            break;
-        };
+        const argStr = stringify_arg(arg);
         argsStr.push(argStr);
       }
       const logText = argsStr.join(' ');

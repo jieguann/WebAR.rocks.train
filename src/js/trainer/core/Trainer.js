@@ -826,7 +826,11 @@ Trainer.train = function(trainingScriptSource){
     UI.set_status('loading...');
   }
   
-  eval.apply(window, [trainingScriptSource]); // eval code in the global context
+  try {
+    eval.apply(window, [trainingScriptSource]); // eval code in the global context
+  } catch(err) {
+    console.log('ERROR: Cannot run the training script. Error =\n  ', (err || 'undefined'));
+  }
   return true;
 };
 
