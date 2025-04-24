@@ -70,7 +70,7 @@ const UICode = (function() {
 
       // open from URL parameter:
       const urlParsed = lib_url.parse_current();
-      const initialTrainingScript = urlParsed.code || 'empty.js';
+      const initialTrainingScript = urlParsed['code'] || 'empty.js';
       that.open_fromURL('trainingScripts/' + initialTrainingScript);
 
       window.addEventListener('resize', update_size);
@@ -137,7 +137,11 @@ const UICode = (function() {
       const reader = new FileReader();
       reader.onload = function(e) {
         const model = JSON.parse(e.target.result);
-        _editor.setValue(model.code);
+        if (!model['code']){
+          alert('This model file seems to be quantizated. It cannot be opened');
+          return;
+        }
+        _editor.setValue(model['code']);
         update_size(); // fix a bug, when open a file and run codemirror becomes huge
 
         if (!$('#fileOpenCodeOnly').get(0).checked){

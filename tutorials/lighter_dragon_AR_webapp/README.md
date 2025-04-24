@@ -89,6 +89,13 @@ You can download a ZIP file containing the three lighter meshes here: [lighters.
 
 ## Train the Neural Network
 
+**NOTICE: Training a neural network takes time—much like making good wine 🍷.  
+For example, the lighter detection neural network `NN_LIGHTER_5.json` was trained for 11 days on an NVIDIA GeForce RTX 2060 GPU, over 1,515,830 minibatches.**
+
+You cannot train a high-quality neural network in just a few hours.  
+If you want to speed up the process, you can load a pre-trained neural network and substitute your own training script. However, such a pre-trained model should not be quantized like `NN_LIGHTER_5.json`—you’ll need to train your own from scratch or use the uncompressed version of the neural network `players/webar-rocks-object-boilerplate/src/assets/neuralNets/Object3DLighter_2025-03-10_uncompressed.json`.
+
+
 ### Hardware Requirements
 
 The WebAR.rocks.train user interface is designed for a screen resolution of 1366×768 or higher (1920×1080 - full HD - is even better). Training a neural network takes time (at least a few days), so it is best to use a computer dedicated to this task.
